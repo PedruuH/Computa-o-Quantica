@@ -1,16 +1,38 @@
+import matplotlib.ticker as ticker
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
+#video aula 7  33:31
+
+class Qugate:
+    @property
+    def X(self):
+        return np.array[[0,1],[1,0]]
+    def Y(self):
+        return np.array[[0,-1j],[1j,0]]
+    def Z(self):
+        return np.array[[1,0],[0,-1]]
 
 class Qubit:
+    @property
+    def theta(self):
+        return 2*np.arccos(self.a)
+    @property
+    def phi(self):
+        return np.arctan2(self.b.imag,self.b.real)
+    @property
+    def x(self):
+        return np.sin(self.theta)*np.cos(self.phi)
+    @property
+    def y(self):
+        return np.sin(self.theta)*np.sin(self.phi)
+    @property
+    def z(self):
+        return np.cos(self.theta)
     def __init__(self):
-        self.theta = 0.0
-        self.phi = 0.0
         self.a = 1.0
         self.b = 0.0+0.0j
-        self.x = 0
-        self.y = 0
-        self.z = 1
+       
     def wf(self):
         return np.array([[self.a],[self.b]])
     def set_bs(self,theta,phi):
@@ -22,8 +44,8 @@ class Qubit:
         self.phi = phi
     def set_pa(self,a,b):
         aux = np.abs(a)**2 + np.abs(b)**2
-        a = np.sqrt(abs(a)**2/aux)
-        b = np.sqrt(abs(b)**2/aux)*(b/np.abs(b))*(np.abs(a)/a)
+        self.a = np.sqrt(abs(a)**2/aux)
+        self.b = np.sqrt(abs(b)**2/aux)*(b/np.abs(b))*(np.abs(a)/a)
         
     def __repr__(self):
         return str(self.wf())
@@ -92,7 +114,22 @@ class Qubit:
         plt.title(title)
         plt.show()
     
+    def measurement(self):
+        if random() <= (np.abs(self.a)**2):
+            return 0 
+        else:
+            return 1
+    def simulate(self, times=1000):
+        data = list (self.measurement() for _ in range(times))
+        plt.hist(data, bins=[-0.1,0.1,0.9,1.1], weight = np.ones(len(data)) / len(data))
+        plt.gca().yaxis.set_major_formatter(ticker.PercentFormatter(1))
+        plt.show()
+
         
 if __name__ == "__main__":
     q = Qubit()
     print(q)
+    q.set_pa(1/np.sqrt(2), 1/np.sqrt(2))
+    print(q.a,q.b)
+    Qubit.plot((q, '\Psi', 'b'), title = 'Meu Qubit')
+    q.simulate(times=100000)
