@@ -4,8 +4,6 @@ import qiskit as qk
 import qiskit.aqua.algorithms as qkal
 import qiskit.aqua.components.oracles as LEO
 from qiskit.tools.visualization import plot_histogram
-from qiskit.tools.monitor import job_monitor 
-from qiskit.circuit.library import QFT
 from apitoken import apitoken 
 
 expression = '((Pedro & Fabio) | (Carlos & Alex)) & ~(Fabio & Alex)'
